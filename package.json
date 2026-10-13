@@ -7,6 +7,10 @@
   "scripts": {
     "dev": "vite build --watch --mode development",
     "build": "tsc --noEmit && vite build",
+    "dev:web": "vite --mode web",
+    "build:web": "tsc --noEmit && vite build --mode web",
+    "serve": "vite preview --mode web",
+    "start": "npm run build:web && npm run serve",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

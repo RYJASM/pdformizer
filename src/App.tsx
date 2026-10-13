@@ -10,6 +10,7 @@ import { FillView } from './features/fill/FillView';
 import { Mapper } from './features/mapper/Mapper';
 import { FormBuilder } from './features/builder/FormBuilder';
 import { DataManager } from './features/data/DataManager';
+import { onLaunchFiles } from './lib/platform';
 
 function useTheme() {
   const theme = useStore((s) => s.settings.theme);
@@ -88,6 +89,16 @@ export function App() {
   useEffect(() => {
     void useStore.getState().init();
   }, []);
+  // a PDF opened from the OS ("Open with Autofill My PDF") lands on the active set's Fill screen
+  useEffect(
+    () =>
+      onLaunchFiles(() => {
+        const s = useStore.getState();
+        const set = s.sets.find((x) => x.id === s.settings.activeSetId) ?? s.sets[0];
+        navigate(set ? routes.fill(set.id) : routes.home());
+      }),
+    [],
+  );
 
   if (!ready) {
     return (

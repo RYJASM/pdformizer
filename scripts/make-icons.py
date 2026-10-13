@@ -14,7 +14,7 @@ out = pathlib.Path(__file__).resolve().parent.parent / 'public' / 'icons'
 out.mkdir(parents=True, exist_ok=True)
 doc = pymupdf.open(stream=svg.encode(), filetype='svg')
 page = doc[0]
-for size in (16, 32, 48, 128):
+for size in (16, 32, 48, 128, 192, 512):
     pix = page.get_pixmap(matrix=pymupdf.Matrix(size / 64, size / 64), alpha=True)
     pix.save(str(out / f'icon{size}.png'))
 print('ok')

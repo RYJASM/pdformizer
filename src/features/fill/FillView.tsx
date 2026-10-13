@@ -32,6 +32,7 @@ import { MenuItem, Popover, Segmented, Spinner, Switch, confirmDialog, cx, promp
 import { PageStack, Thumb, ValueLayer, useFitScale } from '../../components/PdfView';
 import { DataForm } from './DataForm';
 import { timeAgo } from '../../lib/util';
+import { IS_WEB, onLaunchFiles, takeLaunchFiles } from '../../lib/platform';
 
 type DataTab = 'load' | 'saved' | 'all';
 
@@ -163,6 +164,14 @@ export function FillView({ setId }: { setId: string }) {
     [form, set, addDoc],
   );
   const dragOver = usePdfDropImport(onFiles);
+  useEffect(() => {
+    const pull = () => {
+      const files = takeLaunchFiles();
+      if (files.length) void onFiles(files);
+    };
+    pull();
+    return onLaunchFiles(pull);
+  }, [onFiles]);
 
   if (!set || !form) return null;
 
@@ -212,7 +221,7 @@ export function FillView({ setId }: { setId: string }) {
     run('save', async () => {
       if (!included.length || !(await warnMissing(included))) return;
       for (const d of included) await saveBytes(await generate(d, form, eff, set, settings.flattenOnSave), outputFileName(d, form, eff, set), folder);
-      toast(`Saved ${included.length} PDF${included.length === 1 ? '' : 's'}${folder ? ` to Downloads/${folder}` : ''}`, 'success');
+      toast(`Saved ${included.length} PDF${included.length === 1 ? '' : 's'}${folder && !IS_WEB ? ` to Downloads/${folder}` : ''}`, 'success');
     });
   const saveMerged = () =>
     run('save', async () => {
@@ -569,7 +578,7 @@ export function FillView({ setId }: { setId: string }) {
           Save all checked as one PDF
         </MenuItem>
         <div className="menu-sep" />
-        <div className="menu-label">Saves to Downloads/{folder || '…'}</div>
+        <div className="menu-label">{IS_WEB ? 'Saves to your browser’s download folder' : `Saves to Downloads/${folder || '…'}`}</div>
       </Popover>
 
       <Popover anchor={docMenu.anchor} onClose={docMenu.close} align="end">

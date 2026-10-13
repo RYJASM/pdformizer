@@ -5,3 +5,4 @@ dist/
 
 # third-party sample forms kept local only
 Printable_Bill_of_Lading_BOL.pdf
+dist-web/

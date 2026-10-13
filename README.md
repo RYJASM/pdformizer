@@ -13,8 +13,25 @@ npm run build        # type-checks, then builds into dist/
 
 Then open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and pick the `dist/` folder. Clicking the toolbar icon opens the app in a tab.
 
+### Or run it as a local web app
+
+```bash
+npm start            # builds dist-web/ and opens http://localhost:4517
+```
+
+That's the same app with the same features, running at a local address instead of inside the extension. In Chrome or Edge, click the **Install** icon in the address bar to get a desktop/Start-menu app with its own window.
+
+- **It works offline.** After the first visit, a service worker serves the app from cache, so it opens even when `npm start` isn't running. Run `npm start` again only after you update the code.
+- **Open PDFs from the desktop.** Once installed, right-click a PDF and choose *Open with → Autofill My PDF*. The PDF is added to the active set.
+- **Data stays in the browser, tied to `http://localhost:4517`.** The port is fixed so your data stays put. The web app and the extension keep separate data; use **Data → Download backup / Restore backup** to move between them.
+- **Saved PDFs go to the browser's normal download folder.** The *Save into Downloads/…* sub-folder option is extension-only.
+
 | Command | What it does |
 | --- | --- |
+| `npm start` | Build the web app and serve it on port 4517. |
+| `npm run serve` | Serve an existing `dist-web/` build. |
+| `npm run dev:web` | Web dev server with hot reload. |
+| `npm run build:web` | Build the web app into `dist-web/`. |
 | `npm run dev` | Rebuilds `dist/` on every change. Reload the extension to pick it up. |
 | `npm test` | Unit tests: templates, layout, text-file import, auto-map, conditions, and the PDF fill engine. |
 | `npm run typecheck` | TypeScript only. |

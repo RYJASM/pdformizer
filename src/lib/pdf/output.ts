@@ -92,6 +92,8 @@ export async function saveBytes(bytes: Uint8Array, fileName: string, folder = ''
       document.body.appendChild(a);
       a.click();
       a.remove();
+      // back-to-back downloads get dropped by some browsers without a short gap
+      await new Promise((r) => setTimeout(r, 350));
     }
   } finally {
     setTimeout(() => URL.revokeObjectURL(url), 60_000);

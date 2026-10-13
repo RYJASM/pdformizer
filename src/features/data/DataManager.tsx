@@ -7,6 +7,7 @@ import { downloadText, exportBackup, exportFormTemplate, instantiateFormBundle, 
 import { allFileIds, deleteFile } from '../../lib/db';
 import { formatBytes, sanitizeFileName } from '../../lib/util';
 import { formatDate } from '../../lib/template';
+import { IS_WEB } from '../../lib/platform';
 import { Modal, Segmented, Switch, confirmDialog, pickFile, toast } from '../../components/ui';
 
 function ImportPreview({ parsed, onClose, onApply }: { parsed: ParsedData | null; onClose: () => void; onApply: () => void }) {
@@ -143,7 +144,7 @@ export function DataManager() {
           )}
         </div>
         <p className="muted" style={{ marginBottom: 20 }}>
-          Everything is stored privately in this browser. Export regularly so you never lose your setup.
+          Everything is stored privately in this browser{IS_WEB ? ' (for this exact address — keep using the same one)' : ''}. Export regularly so you never lose your setup.
         </p>
 
         <div className="data-grid">
@@ -241,11 +242,13 @@ export function DataManager() {
                 ]}
               />
             </div>
+            {!IS_WEB && (
             <div className="field">
               <label>Save PDFs into Downloads/</label>
               <input className="input input-sm mono" value={settings.downloadFolder} onChange={(e) => setSettings({ downloadFolder: e.target.value })} placeholder="Autofill My PDF/{set_name}" />
               <div className="field-help">Use / for sub-folders. Tokens like {'{set_name}'} or {'{load_number}'} work. Leave blank for Downloads itself.</div>
             </div>
+            )}
             <label className="row small">
               <Switch checked={settings.flattenOnSave} onChange={(v) => setSettings({ flattenOnSave: v })} /> Lock fields in saved PDFs by default
             </label>
